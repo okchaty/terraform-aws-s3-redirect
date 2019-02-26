@@ -2,6 +2,10 @@
 # See ./CONTRIBUTING.rst
 #
 
+export README_FILE ?= README.md
+export README_YAML ?= README.yaml
+export README_INCLUDES ?= $(file://$(shell pwd)/?type=text/plain)
+
 OS := $(shell uname)
 .PHONY: help
 .DEFAULT_GOAL := help
@@ -17,7 +21,7 @@ ROOT_DIR=$(shell pwd)
 MESSAGE:=🍺️
 MESSAGE_HAPPY:="${MESSAGE} Happy Coding"
 REQUIREMENTS_DIR=$(ROOT_DIR)/requirements
-FILE_README:=$(ROOT_DIR)/README.rst
+README_TEMPLATE:=$(ROOT_DIR)/templates/README.md
 
 pip_install := pip install -r
 
@@ -30,10 +34,16 @@ help:
 	@echo '    environment               create environment with pyenv'
 	@echo '    clean                     remove files of build'
 	@echo '    setup                     install requirements'
+	@echo '    readme                    build README'
 	@echo ''
 
+## Create README.md by building it from README.yaml
+readme:
+	@gomplate --file $(README_TEMPLATE) \
+		--out $(README_FILE)
+
 clean:
-	@echo "$(TAG)"Cleaning up"$(END)"
+	@echo "Cleaning up"
 ifneq (Darwin,$(OS))
 	@sudo rm -rf .tox *.egg *.egg-info dist build .coverage .eggs .mypy_cache
 	@sudo rm -rf docs/build
@@ -54,9 +64,6 @@ setup: clean
 	cp -rf .hooks/prepare-commit-msg .git/hooks/
 
 environment: clean
-	@if [ -e "$(HOME)/.pyenv" ]; then \
-		eval "$(pyenv init -)"; \
-		eval "$(pyenv virtualenv-init -)"; \
-	fi
-	pyenv virtualenv ${PYTHON_VERSION} ${PYENV_NAME} >> /dev/null 2>&1 || echo $(MESSAGE_HAPPY)
-	pyenv activate ${PYENV_NAME} >> /dev/null 2>&1 || echo $(MESSAGE_HAPPY)
+	@echo "=====> loading virtualenv ${PYENV_NAME}..."
+	@pyenv virtualenv ${PYTHON_VERSION} ${PYENV_NAME} >> /dev/null 2>&1; \
+	@pyenv activate ${PYENV_NAME} >> /dev/null 2>&1 || echo $(MESSAGE_HAPPY)
