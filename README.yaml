@@ -1,0 +1,65 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name: terraform-aws-s3-redirect
+
+# Tags of this project
+tags:
+  - aws
+  - terraform
+  - terraform-modules
+  - s3
+
+# Categories of this project
+categories:
+  - terraform-modules/s3
+
+# Logo for this project
+#logo: docs/logo.png
+
+# License of this project
+license: "MIT"
+
+# Canonical GitHub repo
+github_repo: okchaty/terraform-aws-s3-redirect
+
+# Badges to display
+badges:
+  - name: "Build Status"
+    image: "https://travis-ci.org/okchaty/terraform-aws-s3-redirect.svg?branch=master"
+    url: "https://travis-ci.org/okchaty/terraform-aws-s3-redirect"
+  - name: "Latest Release"
+    image: "https://img.shields.io/github/release/okchaty/terraform-aws-s3-redirect.svg"
+    url: "https://travis-ci.org/okchaty/terraform-aws-s3-redirect/releases"
+
+# Short description of this project
+description: |-
+  Terraform module to provision an AWS S3 Redirect.
+
+# How to use this project
+usage: |-
+  ```hcl
+    module "redirect" {
+      source    = "git::https://github.com/okchaty/terraform-aws-s3-redirect.git?ref=master"
+      namespace = "chaty"
+      stage     = "prod"
+      domain    = "chatydelivery.com"
+      target    = "www.okchaty.com"
+      zone_id   = "${aws_route53_zone.primary.zone_id}"
+    }
+  ```
+
+  Full working example can be found in [example](./example) folder.
+
+include:
+  - "docs/targets.md"
+  - "docs/terraform.md"
+
+# Contributors to this project
+contributors:
+  - name: "Luis Mayta"
+    github: "luismayta"
